@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My GitHub Site</title>
+    <title>Local Journey</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,8 +31,43 @@
 </head>
 <body>
     <div class="card">
-        <h1>🚀 Welcome!</h1>
-        <p>This site is running on <b>GitHub Pages</b>.</p>
+        <h1>🚀 Welcome to Local Journey!</h1>
+        <p>This site is connected to <b>Firebase</b>!</p>
+        <div id="dataOutput"></div>
     </div>
+
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // Your Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyARIoYOImu8AHp2Z6-EjaOTeVGMbyofCfQ",
+            authDomain: "local-journey-2f661.firebaseapp.com",
+            projectId: "local-journey-2f661",
+            storageBucket: "local-journey-2f661.firebasestorage.app",
+            messagingSenderId: "83386105393",
+            appId: "1:83386105393:web:dc52732f13a69d17721f10",
+            measurementId: "G-HP7RHQEL6L"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Test Firestore Connection - Fetch guides collection
+        async function getGuides() {
+            const querySnapshot = await getDocs(collection(db, "guides"));
+            let output = "<h3>📜 Guides:</h3><ul>";
+            querySnapshot.forEach((doc) => {
+                output += `<li><b>${doc.id}</b>: ${JSON.stringify(doc.data())}</li>`;
+            });
+            output += "</ul>";
+            document.getElementById("dataOutput").innerHTML = output;
+        }
+
+        getGuides();
+    </script>
 </body>
 </html>
