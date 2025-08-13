@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guide Sign Up</title>
+  <script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyARIoYOImu8AHp2Z6-EjaOTeVGMbyofCfQ",
+      authDomain: "local-journey-2f661.firebaseapp.com",
+      projectId: "local-journey-2f661",
+      storageBucket: "local-journey-2f661.firebasestorage.app",
+      messagingSenderId: "83386105393",
+      appId: "1:83386105393:web:dc52732f13a69d17721f10",
+      measurementId: "G-HP7RHQEL6L"
+    };
+
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Sign up function
+    async function signupGuide() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const location = document.getElementById("location").value;
+      const languages = document.getElementById("languages").value;
+      const years = document.getElementById("years").value;
+      const historyTest = document.getElementById("historyTest").value;
+
+      try {
+        // Create account in Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Save guide data in Firestore
+        await addDoc(collection(db, "guides"), {
+          uid: user.uid,
+          name,
+          email,
+          location,
+          languages,
+          years,
+          historyTest
+        });
+
+        alert("Guide signed up successfully!");
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Make available to button onclick
+    window.signupGuide = signupGuide;
+  </script>
+</head>
+<body>
+  <h1>Guide Sign Up</h1>
+  <input type="text" id="name" placeholder="Full Name"><br>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <input type="text" id="location" placeholder="Location (City/District)"><br>
+  <input type="text" id="languages" placeholder="Languages (comma-separated)"><br>
+  <input type="number" id="years" placeholder="Years living there"><br>
+  <textarea id="historyTest" placeholder="Write something about your area's history"></textarea><br>
+  <button onclick="signupGuide()">Sign Up as Guide</button>
+</body>
+</html>
